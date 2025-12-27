@@ -5,7 +5,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, Ask AI Backend!');
+    res.send('Backend is running');
+});
+
+app.get('/api/hello', (req: Request, res: Response) => {
+    res.json({ message: 'Hello, Ask anything with AI' });
 });
 
 app.listen(PORT, () => {
