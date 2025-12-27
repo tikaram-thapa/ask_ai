@@ -1,0 +1,15 @@
+# .gitignore file for backend package
+node_modules/
+dist/
+.env
+.DS_Store
+logs/
+*.log
+
+# Ignore build artifacts
+build/
+*.tsbuildinfo
+
+# Ignore IDE/editor specific files
+.vscode/
+.idea/
