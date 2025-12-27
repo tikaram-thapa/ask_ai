@@ -1,0 +1,34 @@
+# .gitignore for a typical Node.js project
+node_modules/
+dist/
+.env
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+.vscode/
+.idea/
+logs/
+*.log
+
+# Ignore OS generated files
+Thumbs.db
+
+# Ignore build artifacts
+build/
+out/
+
+# Ignore temporary files
+*.tmp
+*.swp
+
+# Ignore IDE specific files
+*.sublime-project
+*.sublime-workspace
+
+# Ignore package lock files (if you prefer to use yarn)
+package-lock.json
+.pnpm-lock.yaml
+yarn.lock
+# Ignore test coverage reports
