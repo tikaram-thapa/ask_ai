@@ -8,7 +8,7 @@
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
-    "target": "esnext",
+    "target": "es2020",
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],
@@ -31,11 +31,17 @@
     // "noUnusedParameters": true,
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
 
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
+    // make it false if you don't use ES modules
+    // ECMAScript imports and exports cannot be written in a CommonJS file under 'verbatimModuleSyntax'
+    // package.json "type": "commonjs" or verbatimModuleSyntax false
+    "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
