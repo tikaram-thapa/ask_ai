@@ -5,7 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Backend is running');
+    res.json({ message: 'Server is running' });
 });
 
 app.get('/api/hello', (req: Request, res: Response) => {
