@@ -13,6 +13,8 @@ type ChatResponse = {
     message: string;
 }
 
+const conversationsList = new Map<string, string>();
+
 // public interface of chat service
 export const chatService = {
     async sendMessage(prompt: string, conversationId: string): Promise<ChatResponse> {
@@ -25,10 +27,17 @@ export const chatService = {
             previous_response_id: conversationRepository.getLastResponseId(conversationId)
         });
         // console.log("responseId: ", response);
+        // Store conversation state
+        conversationsList.set(`${response.id}_prompt`, prompt);
+        conversationsList.set(`${response.id}_response`, response.output_text);
         conversationRepository.setLastResponseId(conversationId, response.id);
         return {
             id: response.id,
             message: response.output_text
         };
+    },
+    async getConversations() {
+        // console.log("Getting conversations...", conversationsList);
+        return Array.from(conversationsList, ([id, message]) => ({ id, message }) );
     }
 }

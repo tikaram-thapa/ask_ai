@@ -16,4 +16,6 @@ router.get("/api/hello", (req: Request, res: Response) => {
 
 router.post('/api/chat', chatController.sendMessage);
 
+router.get('/api/conversations', chatController.getConversations);
+
 export default router;

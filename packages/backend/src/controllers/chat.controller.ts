@@ -13,6 +13,7 @@ export const chatController = {
     async sendMessage (req: Request, res: Response) {
         // Implementation for sending message to OpenAI and managing conversation state
         const { prompt, conversationId } = req.body;
+        // console.log("Received prompt:", prompt, conversationId);
         if (prompt.trim().length < 1) {
             return res.status(400).json({ error: "Prompt is required" });
         }
@@ -24,6 +25,15 @@ export const chatController = {
         res.json({ message: response.message});
         } catch (error) {
             res.status(500).json({ error: "An error occurred while processing your request." });
+        }
+    },
+
+    async getConversations (req: Request, res: Response) {
+        try {
+            const conversations = await chatService.getConversations();
+            res.json({ conversations });
+        } catch (error) {
+            res.status(500).json({ error: "An error occurred while fetching conversations." });
         }
     }
 }
