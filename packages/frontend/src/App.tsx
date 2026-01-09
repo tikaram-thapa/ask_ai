@@ -58,7 +58,8 @@ function App() {
   }, [conversation, isAtBottom]);
 
   // Handle form submission
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     // Prevent default form submission behavior
     fetch("/api/chat", {
       method: "POST",
@@ -119,7 +120,7 @@ function App() {
           placeholder="Ask Anything"
           value={inputPrompt}
           onChange={(e) => setInputPrompt(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+          onKeyDown={(e) => e.key === "Enter" && handleSubmit(e)}
         ></textarea>
         <button
           onClick={handleSubmit}
