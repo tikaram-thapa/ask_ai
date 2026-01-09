@@ -86,7 +86,7 @@ function App() {
   return (
     <>
       <div
-        className="max-h-50 sm:max-h-150 h-screen overflow-y-scroll p-4"
+        className="max-h-135 sm:max-h-150 h-screen overflow-y-scroll p-4"
         ref={containerRef}
       >
         {conversation.length === 0 && (
@@ -116,7 +116,7 @@ function App() {
           {message ? <b>{message}</b> : <b>Loading...</b>}
         </div>
         <textarea
-          className="textarea textarea-md h-32 min-w-100 sm:min-w-200 border-2 border-gray-300 rounded-md p-2"
+          className="h-32 min-w-100 sm:min-w-200 border-2 border-gray-300 rounded-md p-2"
           placeholder="Ask Anything"
           value={inputPrompt}
           onChange={(e) => setInputPrompt(e.target.value)}
@@ -124,13 +124,14 @@ function App() {
         ></textarea>
         <button
           onClick={handleSubmit}
-          className="btn btn-circle justify-center"
+          className="btn btn-circle justify-center rounded-[50%] h-[60px] md:absolute mt-[-70px] md:mt-[95px] ml-[330px] md:ml-[730px]"
           style={{
             borderRadius: "50%",
-            height: "60px",
-            position: "absolute",
-            marginTop: "95px",
-            marginLeft: "730px",
+            width: "60px",
+            //   height: "60px",
+            // position: "absolute",
+            //   marginTop: "95px",
+            //   marginLeft: "730px",
           }}
         >
           <svg
