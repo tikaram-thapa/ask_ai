@@ -12,7 +12,10 @@ function App() {
   // refs for scroll management
   const containerRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef(null);
+  // state to track if user is at bottom
   const [isAtBottom, setIsAtBottom] = useState(true);
+  // state to track keyboard visibility
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   // Fetch message from the backend API on component mount
   useEffect(() => {
@@ -57,6 +60,19 @@ function App() {
     }
   }, [conversation, isAtBottom]);
 
+  // Detect keyboard visibility changes
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return; // TS + runtime safe
+
+    const handler = () => {
+      setKeyboardOpen(vv.height < window.innerHeight);
+    };
+
+    vv.addEventListener("resize", handler);
+    return () => vv.removeEventListener("resize", handler);
+  }, []);
+
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +102,9 @@ function App() {
   return (
     <>
       <div
-        className="max-h-135 sm:max-h-150 h-screen overflow-y-scroll p-4"
+        className={`${
+          keyboardOpen ? "h-[65svh]" : "h-[65dvh]"
+        } min-w-[320px] overflow-y-scroll`} // h-screen: height adjusted for viewport
         ref={containerRef}
       >
         {conversation.length === 0 && (
@@ -111,12 +129,12 @@ function App() {
         ))}
         <div ref={bottomRef} />
       </div>
-      <div className="flex flex-col mb-10 justify-center ">
+      <div className="fixed bottom-6 md:sticky flex flex-col justify-center">
         <div className="text-left p-2">
           {message ? <b>{message}</b> : <b>Loading...</b>}
         </div>
         <textarea
-          className="h-32 min-w-100 sm:min-w-200 border-2 border-gray-300 rounded-md p-2"
+          className="h-32 min-w-84 md:min-w-200 border-2 border-gray-300 rounded-md p-2"
           placeholder="Ask Anything"
           value={inputPrompt}
           onChange={(e) => setInputPrompt(e.target.value)}
@@ -124,14 +142,10 @@ function App() {
         ></textarea>
         <button
           onClick={handleSubmit}
-          className="btn btn-circle justify-center rounded-[50%] h-[60px] md:absolute mt-[-70px] md:mt-[95px] ml-[330px] md:ml-[730px]"
+          className="btn btn-circle justify-center h-[60px] md:absolute mt-[-70px] md:mt-[95px] ml-[265px] md:ml-[730px]"
           style={{
             borderRadius: "50%",
             width: "60px",
-            //   height: "60px",
-            // position: "absolute",
-            //   marginTop: "95px",
-            //   marginLeft: "730px",
           }}
         >
           <svg
