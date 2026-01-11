@@ -1,13 +1,20 @@
 import { useEffect, useState, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import "./App.css";
 
 function App() {
   const [message, setMessage] = useState("");
+  // loading state
+  const [isLoading, setIsLoading] = useState(false);
+  // conversation state
   const [conversation, setConversation] = useState<
     Array<{ id: string; message: string }>
   >([]);
+  // unique user id for session
+  const [userId, setUserId] = useState(null as string | null);
+  // state for input prompt
   const [inputPrompt, setInputPrompt] = useState("");
   // refs for scroll management
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -19,11 +26,25 @@ function App() {
 
   // Fetch message from the backend API on component mount
   useEffect(() => {
+    if (!userId) {
+      const newUserId = uuidv4();
+      setUserId(newUserId);
+    }
+    // Initial fetch for greeting message
     fetch("/api/hello")
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((error) => console.error("Error fetching message:", error));
-    fetch("/api/conversations")
+    // Fetch existing conversations
+    fetch("/api/conversations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+      }),
+    })
       .then((res) => res.json())
       .then((data) => {
         const convoMessages = data.conversations.map((value: any) => {
@@ -76,6 +97,7 @@ function App() {
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     // Prevent default form submission behavior
     fetch("/api/chat", {
       method: "POST",
@@ -83,19 +105,27 @@ function App() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        userId,
         prompt: inputPrompt,
         conversationId: "default-conversation-id",
       }),
     })
       .then((res) => res.json())
       .then((data) => {
+        setIsLoading(false);
         // Update conversation state with the new message
-        setConversation((prevConversation) => [
-          ...prevConversation,
-          { id: `${Date.now()}_prompt`, message: inputPrompt },
-          { id: `${Date.now()}_response`, message: data.message },
-        ]);
+        if (data.message) {
+          setConversation((prevConversation) => [
+            ...prevConversation,
+            { id: `${Date.now()}_prompt`, message: inputPrompt },
+            { id: `${Date.now()}_response`, message: data.message },
+          ]);
+        }
         setInputPrompt(""); // Clear the input field
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        alert("Error sending message:" + error.message);
       });
   };
 
@@ -142,7 +172,8 @@ function App() {
         ></textarea>
         <button
           onClick={handleSubmit}
-          className="btn btn-circle justify-center h-[60px] md:absolute mt-[-70px] md:mt-[95px] ml-[265px] md:ml-[730px]"
+          disabled={isLoading}
+          className="btn btn-circle !bg-blue-500 justify-center h-[60px] md:absolute mt-[-70px] md:mt-[95px] ml-[265px] md:ml-[730px]"
           style={{
             borderRadius: "50%",
             width: "60px",
@@ -166,7 +197,7 @@ function App() {
                 fill-rule="evenodd"
                 clip-rule="evenodd"
                 d="M12 3C12.2652 3 12.5196 3.10536 12.7071 3.29289L19.7071 10.2929C20.0976 10.6834 20.0976 11.3166 19.7071 11.7071C19.3166 12.0976 18.6834 12.0976 18.2929 11.7071L13 6.41421V20C13 20.5523 12.5523 21 12 21C11.4477 21 11 20.5523 11 20V6.41421L5.70711 11.7071C5.31658 12.0976 4.68342 12.0976 4.29289 11.7071C3.90237 11.3166 3.90237 10.6834 4.29289 10.2929L11.2929 3.29289C11.4804 3.10536 11.7348 3 12 3Z"
-                fill="#000000"
+                fill="#faf9f9ff"
               ></path>
             </g>
           </svg>

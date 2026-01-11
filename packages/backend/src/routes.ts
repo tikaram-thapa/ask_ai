@@ -24,6 +24,7 @@ const router = express.Router();
  *         description: Success
  */
 router.get("/api/hello", (req: Request, res: Response) => {
+  // console.log("UserId: ", generateUUID());
   res.json({ message: "Hello, Ask anything with AI" });
 });
 
@@ -38,9 +39,12 @@ router.get("/api/hello", (req: Request, res: Response) => {
  *         schema:
  *           type: object
  *           required:
+ *             - userId
  *             - prompt
  *             - conversationId
  *           properties:
+ *             userId:
+ *               type: string
  *             prompt:
  *               type: string
  *             conversationId:
@@ -55,12 +59,33 @@ router.post('/api/chat', chatController.sendMessage);
  * @swagger
  * /api/conversations:
  *  get:
- *    summary: Get all conversations
+ *    summary: Get user wise conversations
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *         schema:
+ *            type: object
+ *            required:
+ *              - userId
+ *            properties:
+ *              userId:
+ *                type: string
  *    responses:
  *     200:
  *      description: Success
  */
-router.get('/api/conversations', chatController.getConversations);
+router.get('/api/conversations', chatController.getUserConversations);
+
+/**
+ * @swagger
+ * /api/conversationList:
+ *   get:
+ *     summary: Get list of all conversations
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+router.get('/api/conversationList', chatController.getConversationList);
 
 router.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

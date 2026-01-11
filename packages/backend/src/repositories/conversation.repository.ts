@@ -16,10 +16,13 @@ const conversations = new Map<string, string>();
 
 // object of two methods to be used in other files
 export const conversationRepository = {
+    // get last response id for a conversation
     getLastResponseId(conversationId: string) {
-    return conversations.get(conversationId) || null;
-},
-setLastResponseId (conversationId: string, responseId: string) {
-    conversations.set(conversationId, responseId);
-}
+        return conversations.get(conversationId) || null;
+    },
+    // set last response id for a conversation
+    setLastResponseId (conversationId: string, responseId: string) {
+        // console.log("Setting last response id for conversation:", conversationId, responseId);
+        conversations.set(conversationId, responseId);
+    }
 }
